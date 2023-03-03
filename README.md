@@ -1,2 +1,3 @@
 # nim-app
-Example Nim app on prologue on docker on AWS App Runner
+
+Example Nim application powered by Prologue, Docker and AWS App Runner.
