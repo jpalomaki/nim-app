@@ -1,6 +1,6 @@
 # nim-app
 
-Example containerized Nim application powered by [Prologue](https://github.com/planety/prologue).
+Example containerized [Nim](https://nim-lang.org/) application powered by [Prologue](https://github.com/planety/prologue).
 
 ## Build and run locally
 
