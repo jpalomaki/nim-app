@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: ECR repository
+
+Parameters:
+  Name:
+    Type: String
+    Description: Repository name
+
+Resources:
+  Repository: 
+    Type: AWS::ECR::Repository
+    Properties: 
+      RepositoryName: !Ref Name
+      ImageTagMutability: MUTABLE
+
+Outputs:
+  Arn:
+    Description: Repository ARN
+    Value: Repository.Arn
+  Uri:
+    Description: Repository URI
+    Value: !GetAtt Repository.RepositoryUri
