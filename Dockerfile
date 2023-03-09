@@ -10,7 +10,4 @@ FROM gcr.io/distroless/base-debian11:nonroot
 
 COPY --from=builder /usr/src/app /app
 
-USER nonroot
-
 CMD ["/app"]
-
