@@ -16,7 +16,7 @@ docker run --init -it -p 8080:8080 --rm nim-app:0.1
 
 1. Create AWS ECR repository to host the container images
 
-:information_source: We configure ECR image tags as MUTABLE, to leverage the App Runner autodeploy feature
+    :information_source: We configure ECR image tags as MUTABLE, to leverage the App Runner autodeploy feature
 
     ```sh
     aws cloudformation deploy --template-file aws/ecr-repo.yml --stack-name nim-app-ecr --parameter-overrides Name=nim-app
@@ -35,7 +35,7 @@ docker run --init -it -p 8080:8080 --rm nim-app:0.1
 
 3. Deploy the app to AWS App Runner
 
-:information_source: We create an autoscaling configuration using AWS CLI, because [Cloudformation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_AppRunner.html) does not yet support it
+    :information_source: We create an autoscaling configuration using AWS CLI, because [Cloudformation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_AppRunner.html) does not yet support it
 
     ```sh
     autoscaling_config_arn="$(aws apprunner create-auto-scaling-configuration --auto-scaling-configuration-name nim-app \
