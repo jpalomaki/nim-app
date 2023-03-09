@@ -5,18 +5,20 @@ Example containerized [Nim](https://nim-lang.org/) application powered by [Prolo
 ## Build and run locally
 
 ```sh
-docker build --no-cache -t nim-app:0.1 .
-docker run --init -it -p 8080:8080 --rm nim-app:0.1
+docker build -t nim-app:v1 .
+docker run --init -it -p 8080:8080 --rm nim-app:v1
 # curl http://localhost:8080 
 ```
 
-## Host the app using AWS App Runner
+## Host the app with AWS App Runner (public endpoint)
 
-:information_source: This requires an AWS account and will incur some costs.
+:warning: This guide is a work in progress, and may be incomplete
+
+:information_source: This requires an [AWS account](https://aws.amazon.com/premiumsupport/knowledge-center/create-and-activate-aws-account/) and will incur some [costs](https://aws.amazon.com/apprunner/pricing/).
 
 1. Create AWS ECR repository to host the container images
 
-    :information_source: We configure ECR image tags as MUTABLE, to leverage the App Runner autodeploy feature
+    :information_source: We configure ECR image tags as MUTABLE, to leverage the App Runner autodeployment feature
 
     ```sh
     aws cloudformation deploy --template-file aws/ecr-repo.yml --stack-name nim-app-ecr --parameter-overrides Name=nim-app
@@ -35,7 +37,7 @@ docker run --init -it -p 8080:8080 --rm nim-app:0.1
 
 3. Deploy the app to AWS App Runner
 
-    :information_source: We create an autoscaling configuration using AWS CLI, because [Cloudformation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_AppRunner.html) does not yet support it
+    :information_source: We create an autoscaling configuration using AWS CLI, because [CloudFormation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_AppRunner.html) does not yet support it
 
     ```sh
     autoscaling_config_arn="$(aws apprunner create-auto-scaling-configuration --auto-scaling-configuration-name nim-app \
@@ -47,14 +49,31 @@ docker run --init -it -p 8080:8080 --rm nim-app:0.1
 
 4. Try changing the `hello` handler code in [src/app.nim](src/app.nim), then build, tag and push the `v1` image again, and observe result
 
-## Proxy traffic to your site through Cloudflare
+## Proxy traffic to the app through Cloudflare
 
-This requires a Cloudflare account and website.
+This requires a [Cloudflare](https://dash.cloudflare.com/sign-up) account and website.
 
 1. Create custom domain for App Runner
 
-TODO
+    TODO
 
 2. Configure Cloudflare website to route traffic to AWS App Runner origin
 
-TODO
+    TODO
+
+## Tear down AWS resources
+
+```sh
+aws cloudformation delete-stack --stack-name nim-app-runner
+aws cloudformation wait stack-delete-complete --stack-name nim-app-runner
+aws apprunner delete-auto-scaling-configuration --auto-scaling-configuration-arn $autoscaling_config_arn
+for digest in $(aws ecr list-images --repository-name nim-app | jq -r '.imageIds[].imageDigest'); do
+    aws ecr batch-delete-image --repository-name nim-app --image-ids imageDigest=$digest
+done
+aws cloudformation delete-stack --stack-name nim-app-ecr
+aws cloudformation wait stack-delete-complete --stack-name nim-app-ecr
+```
+
+## TODOs
+
+- Explore use of [AWS C++ SDK](https://aws.amazon.com/sdk-for-cpp/) from Nim (calling e.g. DynamoDB)
