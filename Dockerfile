@@ -6,7 +6,7 @@ COPY . ./
 
 RUN nimble build -y -d:release
 
-FROM gcr.io/distroless/base-debian11:nonroot
+FROM gcr.io/distroless/base:nonroot
 
 COPY --from=builder /usr/src/app /app
 
