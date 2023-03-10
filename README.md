@@ -36,14 +36,15 @@ docker run --init -it -p 8080:8080 --rm nim-app:v1
 
 3. Deploy the app to AWS App Runner
 
-    :information_source: We create an autoscaling configuration using AWS CLI, because [CloudFormation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_AppRunner.html) does not yet support it
+    :information_source: We create an autoscaling configuration using AWS CLI, because [CloudFormation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_AppRunner.html) does not yet support this functionality
 
     ```sh
     autoscaling_config_arn="$(aws apprunner create-auto-scaling-configuration --auto-scaling-configuration-name nim-app \
         --max-concurrency 100 --min-size 1 --max-size 2 | jq -r '.AutoScalingConfiguration.AutoScalingConfigurationArn')"
     aws cloudformation deploy --template-file aws/app-runner.yml --capabilities CAPABILITY_NAMED_IAM \
         --stack-name nim-app-runner --parameter-overrides Image="$ecr_repository:v1" AutoScalingConfigArn=$autoscaling_config_arn
-    echo "Application URL: https://$(aws cloudformation describe-stacks --stack-name nim-app-runner | jq -r '.Stacks[0].Outputs[] | select(.OutputKey == "Url") | .OutputValue')"
+    service_arn="$(aws cloudformation describe-stacks --stack-name nim-app-runner | jq -r '.Stacks[0].Outputs[] | select(.OutputKey == "Arn") | .OutputValue')"
+    echo "Service URL: https://$(aws cloudformation describe-stacks --stack-name nim-app-runner | jq -r '.Stacks[0].Outputs[] | select(.OutputKey == "Url") | .OutputValue')"
     ```
 
 4. Try changing the `hello` handler code in [src/app.nim](src/app.nim), then build, tag and push the `v1` image again, and observe result
@@ -52,13 +53,22 @@ docker run --init -it -p 8080:8080 --rm nim-app:v1
 
 This requires a [Cloudflare](https://dash.cloudflare.com/sign-up) account and website.
 
-1. Create custom domain for App Runner
+1. Associate custom DNS domain (e.g. `app.example.com`) to the App Runner service
 
-    TODO
+    :information_source: We use AWS CLI here, because [CloudFormation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_AppRunner.html) does not yet support this functionality
 
-2. Configure Cloudflare website to route traffic to AWS App Runner origin
+    ```sh
+    aws apprunner associate-custom-domain --service-arn $service_arn --domain-name <domain> --no-enable-www-subdomain
+    aws apprunner describe-custom-domains --service-arn $service_arn | jq -r '.CustomDomains[0].CertificateValidationRecords[]'
+    ```
 
-    TODO
+2. Create DNS records in Cloudflare DNS
+    - Login to [Cloudflare dashboard](https://dash.cloudflare.com)
+    - Navigate to <website> → DNS → Records
+    - Select `Add record` and create a `DNS Only` CNAME record for all the validation records from step 1
+    - Select `Add record` and create a `Proxied` (orange clouded) CNAME record for <domain> pointing to the App Runner service URL
+ 
+3. Test the app at `https://<domain`
 
 ## Tear down AWS resources
 
