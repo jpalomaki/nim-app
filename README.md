@@ -1,6 +1,8 @@
 # nim-app
 
-Containerized [Nim](https://nim-lang.org/) application powered by [Prologue](https://github.com/planety/prologue).
+Containerized sample [Nim](https://nim-lang.org/) application powered by [Prologue](https://github.com/planety/prologue).
+
+We deploy the application to AWS App Runner and proxy traffic to it via Cloudflare.
 
 ## Build and run locally
 
@@ -34,7 +36,7 @@ docker run --init -it -p 8080:8080 --rm nim-app:v1
     docker push $ecr_repository:v1
     ```
 
-3. Deploy the app to AWS App Runner
+3. Deploy the app as AWS App Runner service
 
     :information_source: We create an autoscaling configuration using AWS CLI, because [CloudFormation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_AppRunner.html) does not yet support this functionality
 
@@ -49,7 +51,7 @@ docker run --init -it -p 8080:8080 --rm nim-app:v1
 
 4. Try changing the `hello` handler code in [src/app.nim](src/app.nim), then build, tag and push the `v1` image again, and observe result
 
-## Proxy traffic to the app through Cloudflare
+## Proxy traffic to the App Runner service through Cloudflare
 
 This requires a [Cloudflare](https://dash.cloudflare.com/sign-up) account and website.
 
