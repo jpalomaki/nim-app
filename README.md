@@ -77,3 +77,4 @@ aws cloudformation wait stack-delete-complete --stack-name nim-app-ecr
 ## TODOs
 
 - Explore use of [AWS C++ SDK](https://aws.amazon.com/sdk-for-cpp/) from Nim (calling e.g. DynamoDB)
+  - <https://nim-lang.org/docs/manual.html#implementation-specific-pragmas-importcpp-pragma>
