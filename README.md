@@ -62,11 +62,13 @@ This requires a [Cloudflare](https://dash.cloudflare.com/sign-up) account and we
     aws apprunner describe-custom-domains --service-arn $service_arn | jq -r '.CustomDomains[0].CertificateValidationRecords[]'
     ```
 
-2. Create DNS records in Cloudflare DNS
+2. Create DNS records in Cloudflare DNS and configure SSL/TLS
     - Login to [Cloudflare dashboard](https://dash.cloudflare.com)
     - Navigate to `<website>` → DNS → Records
     - Select `Add record` and create a `DNS Only` CNAME record for all the validation records from step 1
     - Select `Add record` and create a `Proxied` (orange clouded) CNAME record for <domain> pointing to the App Runner service URL
+    - Navigate to `<website>` → SSL/TLS → Overview
+    - Ensure that encryption mode is `Full (strict)`
  
 3. Test the app at `https://<domain`
 
