@@ -74,18 +74,26 @@ This requires a [Cloudflare](https://dash.cloudflare.com/sign-up) account and we
  
 3. Test the app at `https://<domain`
 
-## Tear down AWS resources
+## Tear down all resources
 
-```sh
-aws cloudformation delete-stack --stack-name nim-app-runner
-aws cloudformation wait stack-delete-complete --stack-name nim-app-runner
-aws apprunner delete-auto-scaling-configuration --auto-scaling-configuration-arn $autoscaling_config_arn
-for digest in $(aws ecr list-images --repository-name nim-app | jq -r '.imageIds[].imageDigest'); do
-    aws ecr batch-delete-image --repository-name nim-app --image-ids imageDigest=$digest
-done
-aws cloudformation delete-stack --stack-name nim-app-ecr
-aws cloudformation wait stack-delete-complete --stack-name nim-app-ecr
-```
+1. Remove AWS resources
+
+    ```sh
+    aws cloudformation delete-stack --stack-name nim-app-runner
+    aws cloudformation wait stack-delete-complete --stack-name nim-app-runner
+    aws apprunner delete-auto-scaling-configuration --auto-scaling-configuration-arn $autoscaling_config_arn
+    for digest in $(aws ecr list-images --repository-name nim-app | jq -r '.imageIds[].imageDigest'); do
+        aws ecr batch-delete-image --repository-name nim-app --image-ids imageDigest=$digest
+    done
+    aws cloudformation delete-stack --stack-name nim-app-ecr
+    aws cloudformation wait stack-delete-complete --stack-name nim-app-ecr
+    ```
+
+2. Delete Cloudflare DNS records
+
+   - Login to [Cloudflare dashboard](https://dash.cloudflare.com)
+   - Navigate to `<website>` → DNS → Records
+   - Delete the associated certificate validation and proxy CNAME records
 
 ## TODOs
 
