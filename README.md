@@ -13,7 +13,7 @@ docker run --init -it -p 8080:8080 --rm nim-app:v1
 
 :warning: This guide is a work in progress, and may be incomplete
 
-:information_source: This requires an [AWS account](https://aws.amazon.com/premiumsupport/knowledge-center/create-and-activate-aws-account/) and will incur some [costs](https://aws.amazon.com/apprunner/pricing/).
+:information_source: This requires an [AWS account](https://aws.amazon.com/premiumsupport/knowledge-center/create-and-activate-aws-account/) and will incur some [App Runner](https://aws.amazon.com/apprunner/pricing/) and [ECR](https://aws.amazon.com/ecr/pricing/) costs.
 
 1. Create AWS ECR repository to host the container images
 
