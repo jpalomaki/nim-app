@@ -64,7 +64,7 @@ This requires a [Cloudflare](https://dash.cloudflare.com/sign-up) account and we
 
 2. Create DNS records in Cloudflare DNS
     - Login to [Cloudflare dashboard](https://dash.cloudflare.com)
-    - Navigate to `<website> → DNS → Records
+    - Navigate to <website> → DNS → Records
     - Select `Add record` and create a `DNS Only` CNAME record for all the validation records from step 1
     - Select `Add record` and create a `Proxied` (orange clouded) CNAME record for <domain> pointing to the App Runner service URL
  
