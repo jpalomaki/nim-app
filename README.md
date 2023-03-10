@@ -7,7 +7,6 @@ Containerized [Nim](https://nim-lang.org/) application powered by [Prologue](htt
 ```sh
 docker build -t nim-app:v1 .
 docker run --init -it -p 8080:8080 --rm nim-app:v1
-# curl http://localhost:8080 
 ```
 
 ## Host the app with AWS App Runner (public endpoint)
