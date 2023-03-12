@@ -76,7 +76,13 @@ This requires a [Cloudflare](https://dash.cloudflare.com/sign-up) account and we
 
 ## Tear down all resources
 
-1. Remove AWS resources
+1. Delete Cloudflare DNS records
+
+   - Login to [Cloudflare dashboard](https://dash.cloudflare.com)
+   - Navigate to `<website>` → DNS → Records
+   - Delete the associated certificate validation and proxy CNAME records
+
+2. Remove AWS resources
 
     ```sh
     aws cloudformation delete-stack --stack-name nim-app-runner
@@ -88,12 +94,6 @@ This requires a [Cloudflare](https://dash.cloudflare.com/sign-up) account and we
     aws cloudformation delete-stack --stack-name nim-app-ecr
     aws cloudformation wait stack-delete-complete --stack-name nim-app-ecr
     ```
-
-2. Delete Cloudflare DNS records
-
-   - Login to [Cloudflare dashboard](https://dash.cloudflare.com)
-   - Navigate to `<website>` → DNS → Records
-   - Delete the associated certificate validation and proxy CNAME records
 
 ## TODOs
 
