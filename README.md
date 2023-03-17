@@ -38,7 +38,7 @@ docker run --init -it -p 8080:8080 --rm nim-app:v1
 
 3. Deploy the app as AWS App Runner service
 
-    :information_source: We create an autoscaling configuration using AWS CLI, because [CloudFormation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_AppRunner.html) does not yet support this functionality
+    :information_source: We create the autoscaling configuration using AWS CLI, because [CloudFormation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_AppRunner.html) does not yet support this functionality
 
     ```sh
     autoscaling_config_arn="$(aws apprunner create-auto-scaling-configuration --auto-scaling-configuration-name nim-app \
